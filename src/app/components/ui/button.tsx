@@ -1,0 +1,68 @@
+import { useRef } from "react";
+
+export interface IButtonProps {
+  label: string;
+  variant?: "primary" | "secondary" | "ghost" | "icon" | "link";
+  onClick?: () => void;
+  className?: string;
+}
+
+export default function Button({
+  label,
+  variant = "primary",
+  onClick,
+  className,
+}: IButtonProps) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "Enter") {
+      buttonRef.current?.click();
+    }
+  };
+
+  const defaultStyles = "w-full rounded-lg px-4 py-2 cursor-pointer ";
+
+  const buttonStyles = () => {
+    switch (variant) {
+      case "primary":
+        return (
+          defaultStyles +
+          "bg-indigo-800 hover:bg-indigo-900 active:bg-indigo-950"
+        );
+      case "ghost":
+        return (
+          defaultStyles +
+          "bg-transparent border hover:bg-gray-900/30 active:bg-gray-900/50"
+        );
+      case "link":
+        return (
+          defaultStyles +
+          "bg-transparent border-b-2 rounded-none !w-auto !py-0 !px-1 hover:bg-gray-900/30 active:bg-gray-900/50"
+        );
+      default:
+        return (
+          defaultStyles +
+          "w-full bg-indigo-800 rounded-lg px-4 py-1 cursor-pointer hover:bg-indigo-900 active:bg-indigo-950"
+        );
+    }
+  };
+
+  const handleButtonClick = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (onClick) {
+      onClick();
+    }
+  };
+
+  return (
+    <button
+      type="submit"
+      className={`${buttonStyles()} ${className}`}
+      onKeyDown={handleKeyDown}
+      onClick={handleButtonClick}
+    >
+      {label}
+    </button>
+  );
+}
