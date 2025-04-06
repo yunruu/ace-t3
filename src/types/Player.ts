@@ -1,11 +1,11 @@
-import { PlayerEnum } from "@/types";
+import { PositionEnum, User } from "@/types";
 
 export class Player {
-  id: string;
-  player: PlayerEnum;
+  user: User;
+  position?: PositionEnum;
 
-  constructor(id: string, player: PlayerEnum) {
-    this.id = id;
-    this.player = player;
+  constructor(user: User, position: PositionEnum) {
+    this.user = user;
+    this.position = position;
   }
 }
