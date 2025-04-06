@@ -2,8 +2,13 @@
 
 import { useState } from "react";
 import Button from "./ui/button";
+import { Player } from "@/types";
 
-export default function Login() {
+export interface ILoginProps {
+  onLogin: (p: Player) => void;
+}
+
+export default function Login({ onLogin }: ILoginProps) {
   const [type, setType] = useState("Login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +37,9 @@ export default function Login() {
 
   const registerUser = () => {};
 
-  const loginUser = () => {};
+  const loginUser = () => {
+    // onLogin()
+  };
 
   return (
     <div className="flex flex-col justify-center items-center h-[70vh]">
