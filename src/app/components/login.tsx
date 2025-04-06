@@ -2,17 +2,43 @@
 
 import { useState } from "react";
 import Button from "./ui/button";
-import { Player } from "@/types";
+import { User } from "@/types";
+import { loginUser, registerUser } from "@/firebase/userService";
+import Toast, { IToastProps } from "./ui/toast";
 
 export interface ILoginProps {
-  onLogin: (p: Player) => void;
+  onLogin: (user: User) => void;
+}
+
+export enum LoginEnum {
+  LOGIN = "Login",
+  REGISTER = "Register",
 }
 
 export default function Login({ onLogin }: ILoginProps) {
-  const [type, setType] = useState("Login");
+  const [type, setType] = useState<LoginEnum>(LoginEnum.LOGIN);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [toastController, setToastController] = useState<IToastProps>({
+    message: "",
+    isOpen: false,
+    toastType: "success",
+  });
+
+  const toast = (message: string, toastType:  "success" | "warning" | "danger") => {
+    setToastController({
+      message,
+      isOpen: true,
+      toastType,
+    });
+    setTimeout(() => {
+      setToastController({
+        ...toastController,
+        isOpen: false,
+      });
+    }, 5000);
+  };
 
   const handleSubmit = () => {
     if (!username || !password) {
@@ -20,25 +46,38 @@ export default function Login({ onLogin }: ILoginProps) {
       return;
     }
     setError("");
-    if (type === "Login") {
-      loginUser();
+    if (type === LoginEnum.LOGIN) {
+      login();
     } else {
-      registerUser();
+      register();
     }
   };
 
   const handleChangeType = () => {
-    if (type === "Login") {
-      setType("Register");
+    if (type === LoginEnum.LOGIN) {
+      setType(LoginEnum.REGISTER);
     } else {
-      setType("Login");
+      setType(LoginEnum.LOGIN);
     }
   };
 
-  const registerUser = () => {};
+  const register = async () => {
+    try {
+      await registerUser(username, password);
+      toast("Account created successfully", "success");
+      setType(LoginEnum.LOGIN);
+    } catch (e) {
+      toast((e as Error).message, "danger");
+    }
+  };
 
-  const loginUser = () => {
-    // onLogin()
+  const login = async () => {
+    try {
+      const user = await loginUser(username, password);
+      onLogin(user);
+    } catch (e) {
+      toast((e as Error).message, "danger");
+    }
   };
 
   return (
@@ -109,6 +148,11 @@ export default function Login({ onLogin }: ILoginProps) {
           onClick={handleChangeType}
         />
       </form>
+      <Toast
+        message={toastController.message}
+        isOpen={toastController.isOpen}
+        toastType={toastController.toastType}
+      />
     </div>
   );
 }
