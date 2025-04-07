@@ -1,5 +1,5 @@
 export interface ISpinnerProps {
-  className: string
+  className?: string
 }
 
 export default function Spinner({className}: ISpinnerProps) {
