@@ -24,13 +24,30 @@ export const joinGame = async (user: User): Promise<Game> => {
   user = new User(user.id, user.username);
   const player = new Player(user, PositionEnum.NONE);
 
+  // find match user is already in
   for (const gameDoc of gamesSnapshot.docs) {
     const data = gameDoc.data();
     const curr = data as Game;
-    if (!curr.completed) {
-      game = convertToGame(curr);
-      gameDocRef = gameDoc.ref;
-      break;
+    if (curr.completed) continue;
+    if (
+      user.id === curr.playerOne?.user.id ||
+      user.id === curr.playerTwo?.user.id
+    ) {
+      return convertToGame(curr);
+    }
+  }
+
+  // find match with only one player
+  if (!game) {
+    for (const gameDoc of gamesSnapshot.docs) {
+      const data = gameDoc.data();
+      const curr = data as Game;
+      if (curr.completed) continue;
+      if (!curr.playerTwo) {
+        game = convertToGame(curr);
+        gameDocRef = gameDoc.ref;
+        break;
+      }
     }
   }
 
@@ -49,7 +66,7 @@ export const joinGame = async (user: User): Promise<Game> => {
 };
 
 export const getGame = async (gameId: string): Promise<Game> => {
-  const gameRef = doc(db, "games", gameId);
+  const gameRef = doc(db, GAMES_COLLECTION, gameId);
   const gameSnap = await getDoc(gameRef);
   if (!gameSnap.exists()) {
     throw new Error("Game does not exist");
@@ -58,15 +75,30 @@ export const getGame = async (gameId: string): Promise<Game> => {
 };
 
 export const saveGame = async (gameId: string, data: Game) => {
-  const gameRef = doc(db, "games", gameId);
+  const gameRef = doc(db, GAMES_COLLECTION, gameId);
   await setDoc(gameRef, data);
 };
 
 export const listenToGame = (gameId: string, callback: (data: any) => void) => {
-  const gameRef = doc(db, "games", gameId);
+  const gameRef = doc(db, GAMES_COLLECTION, gameId);
   return onSnapshot(gameRef, (doc) => {
     if (doc.exists()) {
       callback(doc.data());
     }
   });
 };
+
+// const listenToGame = (gameId: string, callback: (data: any) => void) => {
+//   const gameRef = doc(db, "games", gameId);
+
+//   const unsub = onSnapshot(gameRef, (docSnapshot) => {
+//     if (docSnapshot.exists()) {
+//       const gameData = docSnapshot.data();
+//       callback(gameData);
+//     } else {
+//       console.log("No such document!");
+//     }
+//   });
+
+//   return unsub; // You can call this to stop listening
+// };
