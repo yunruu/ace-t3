@@ -17,6 +17,7 @@ export default function Home() {
     isOpen: false,
     toastType: "success",
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsMounted(true); // Set to true after the component mounts
@@ -24,9 +25,12 @@ export default function Home() {
 
   const startGame = async (user: User) => {
     if (!user) return;
+    setLoading(true);
     try {
       const game = await joinGame(user);
-      router.push(game.id);
+      if (!game.docId) return;
+      router.push(game.docId);
+      setLoading(false);
     } catch (e) {
       console.error(e);
       toast((e as Error).message, "danger", setToastController);
@@ -52,6 +56,12 @@ export default function Home() {
         isOpen={toastController.isOpen}
         toastType={toastController.toastType}
       />
+      {loading && (
+        <section className="m-auto h-[70vh] flex flex-col gap-7 items-center justify-center">
+          <h2 className="text-2xl text-gray-300">Finding a game...</h2>
+          <Spinner />
+        </section>
+      )}
     </div>
   );
 }

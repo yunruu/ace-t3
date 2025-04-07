@@ -5,6 +5,7 @@ import Button from "./ui/button";
 import { User } from "@/types";
 import { loginUser, registerUser } from "@/firebase/userService";
 import Toast, { IToastProps, toast } from "./ui/toast";
+import { login as lsLogin } from "@/utils/login";
 
 export interface ILoginProps {
   onLogin: (user: User) => void;
@@ -61,6 +62,7 @@ export default function Login({ onLogin }: ILoginProps) {
   const login = async () => {
     try {
       const user = await loginUser(username, password);
+      lsLogin(user);
       onLogin(user);
     } catch (e) {
       toast((e as Error).message, "danger", setToastController);
