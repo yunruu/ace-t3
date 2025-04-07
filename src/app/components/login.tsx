@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "./ui/button";
 import { User } from "@/types";
 import { loginUser, registerUser } from "@/firebase/userService";
@@ -26,12 +26,6 @@ export default function Login({ onLogin }: ILoginProps) {
     toastType: "success",
   });
 
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true); // Set to true after the component mounts
-  }, []);
-
   const handleSubmit = () => {
     if (!username || !password) {
       setError("Please enter both username and password.");
@@ -46,7 +40,7 @@ export default function Login({ onLogin }: ILoginProps) {
   };
 
   const handleChangeType = () => {
-    setError("")
+    setError("");
     if (type === LoginEnum.LOGIN) {
       setType(LoginEnum.REGISTER);
     } else {
@@ -72,10 +66,6 @@ export default function Login({ onLogin }: ILoginProps) {
       toast((e as Error).message, "danger", setToastController);
     }
   };
-
-  if (!isMounted) {
-    return null;
-  }
 
   return (
     <div className="flex flex-col justify-center items-center h-[70vh]">

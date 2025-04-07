@@ -2,10 +2,12 @@
 
 import GameBoard from "@/app/components/gameboard";
 import Login from "./components/login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toast, { IToastProps, toast } from "./components/ui/toast";
+import Spinner from "./components/ui/spinner";
 
 export default function Home() {
+  const [isMounted, setIsMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [toastController, setToastController] = useState<IToastProps>({
     message: "",
@@ -13,10 +15,20 @@ export default function Home() {
     toastType: "success",
   });
 
+  useEffect(() => {
+    setIsMounted(true); // Set to true after the component mounts
+  }, []);
+
   const handleLogin = () => {
     setIsLoggedIn(true);
     toast("Logged in successfully", "success", setToastController);
   };
+
+  if (!isMounted) {
+    return (
+        <Spinner className="m-auto h-full flex items-center"/>
+    );
+  }
 
   return (
     <div>
