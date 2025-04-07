@@ -5,6 +5,7 @@ export interface IButtonProps {
   variant?: "primary" | "secondary" | "ghost" | "icon" | "link";
   onClick?: () => void;
   className?: string;
+  type?: "submit" | "reset" | "button" | undefined;
 }
 
 export default function Button({
@@ -12,6 +13,7 @@ export default function Button({
   variant = "primary",
   onClick,
   className,
+  type,
 }: IButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -38,7 +40,7 @@ export default function Button({
       case "link":
         return (
           defaultStyles +
-          "bg-transparent border-b-2 rounded-none !w-auto !py-0 !px-1 hover:bg-gray-900/30 active:bg-gray-900/50"
+          "bg-transparent border-b-2 rounded-none !w-auto !py-0 !px-1"
         );
       default:
         return (
@@ -57,7 +59,7 @@ export default function Button({
 
   return (
     <button
-      type="submit"
+      type={type}
       className={`${buttonStyles()} ${className}`}
       onKeyDown={handleKeyDown}
       onClick={handleButtonClick}
