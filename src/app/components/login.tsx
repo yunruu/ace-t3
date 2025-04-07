@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./ui/button";
 import { User } from "@/types";
 import { loginUser, registerUser } from "@/firebase/userService";
-import Toast, { IToastProps } from "./ui/toast";
+import Toast, { IToastProps, toast } from "./ui/toast";
 
 export interface ILoginProps {
   onLogin: (user: User) => void;
@@ -26,19 +26,11 @@ export default function Login({ onLogin }: ILoginProps) {
     toastType: "success",
   });
 
-  const toast = (message: string, toastType:  "success" | "warning" | "danger") => {
-    setToastController({
-      message,
-      isOpen: true,
-      toastType,
-    });
-    setTimeout(() => {
-      setToastController({
-        ...toastController,
-        isOpen: false,
-      });
-    }, 5000);
-  };
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true); // Set to true after the component mounts
+  }, []);
 
   const handleSubmit = () => {
     if (!username || !password) {
@@ -64,10 +56,10 @@ export default function Login({ onLogin }: ILoginProps) {
   const register = async () => {
     try {
       await registerUser(username, password);
-      toast("Account created successfully", "success");
+      toast("Account created successfully", "success", setToastController);
       setType(LoginEnum.LOGIN);
     } catch (e) {
-      toast((e as Error).message, "danger");
+      toast((e as Error).message, "danger", setToastController);
     }
   };
 
@@ -76,16 +68,17 @@ export default function Login({ onLogin }: ILoginProps) {
       const user = await loginUser(username, password);
       onLogin(user);
     } catch (e) {
-      toast((e as Error).message, "danger");
+      toast((e as Error).message, "danger", setToastController);
     }
   };
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col justify-center items-center h-[70vh]">
-      <form
-        onSubmit={handleSubmit}
-        className="sm:w-[80vw] md:w-[70vw] lg:w-[55vw] m-auto space-y-4 p-6 border rounded-xl shadow-md"
-      >
+      <form className="sm:w-[80vw] md:w-[70vw] lg:w-[55vw] m-auto space-y-4 p-6 border rounded-xl shadow-md">
         <h2 className="text-xl font-semibold">{type}</h2>
         <div className="space-x-4">
           <label htmlFor="username">Username</label>
@@ -136,14 +129,19 @@ export default function Login({ onLogin }: ILoginProps) {
             {error}
           </div>
         )}
-        <Button label={type} className="mt-3" onClick={handleSubmit} />
+        <Button
+          type="submit"
+          label={type}
+          className="mt-3"
+          onClick={handleSubmit}
+        />
         <Button
           className="float-end"
           variant="link"
           label={
             type === "Login"
-              ? "Or register for an account"
-              : "Or login to your account"
+              ? "Register for an account"
+              : "Login to your account"
           }
           onClick={handleChangeType}
         />
