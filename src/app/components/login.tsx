@@ -46,6 +46,7 @@ export default function Login({ onLogin }: ILoginProps) {
   };
 
   const handleChangeType = () => {
+    setError("")
     if (type === LoginEnum.LOGIN) {
       setType(LoginEnum.REGISTER);
     } else {
@@ -131,7 +132,7 @@ export default function Login({ onLogin }: ILoginProps) {
         )}
         <Button
           type="submit"
-          label={type}
+          label={type === LoginEnum.LOGIN ? "Login & start" : type}
           className="mt-3"
           onClick={handleSubmit}
         />
@@ -139,7 +140,7 @@ export default function Login({ onLogin }: ILoginProps) {
           className="float-end"
           variant="link"
           label={
-            type === "Login"
+            type === LoginEnum.LOGIN
               ? "Register for an account"
               : "Login to your account"
           }
