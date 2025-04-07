@@ -1,8 +1,8 @@
 export interface ISpinnerProps {
-  className?: string
+  className?: string;
 }
 
-export default function Spinner({className}: ISpinnerProps) {
+export default function Spinner({ className }: ISpinnerProps) {
   return (
     <div role="status" className={`w-fit ${className}`}>
       <svg
