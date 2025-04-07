@@ -8,12 +8,12 @@ import {
   setDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { Player, PlayerEnum } from "@/types";
+import { Player, PositionEnum } from "@/types";
 import { getRandUuid } from "./service";
 
 const GAMES_COLLECTION = "games";
 
-export const joinGame = async (playerId: string): Promise<Game> => {
+export const joinGame = async (player: Player): Promise<Game> => {
   const gamesRef = collection(db, GAMES_COLLECTION);
   const gamesSnapshot = await getDocs(gamesRef);
   let game: Game | null = null;
@@ -26,12 +26,11 @@ export const joinGame = async (playerId: string): Promise<Game> => {
   }
 
   if (game) {
-    game.playerTwo = new Player(playerId, PlayerEnum.TWO);
+    player.position = PositionEnum.TWO;
+    game.playerTwo = player;
   } else {
-    const newGame = new Game(
-      getRandUuid(),
-      new Player(playerId, PlayerEnum.ONE),
-    );
+    player.position = PositionEnum.ONE;
+    const newGame = new Game(getRandUuid(), player);
     const newGameRef = doc(gamesRef);
     await setDoc(newGameRef, newGame);
     game = newGame;
