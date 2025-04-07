@@ -7,32 +7,42 @@ import {
   getDocs,
   setDoc,
   onSnapshot,
+  updateDoc,
+  DocumentReference,
 } from "firebase/firestore";
-import { Player, PositionEnum } from "@/types";
+import { Player, PositionEnum, User } from "@/types";
 import { getRandUuid } from "./service";
+import { convertToGame } from "@/utils/convertor";
 
 const GAMES_COLLECTION = "games";
 
-export const joinGame = async (player: Player): Promise<Game> => {
+export const joinGame = async (user: User): Promise<Game> => {
   const gamesRef = collection(db, GAMES_COLLECTION);
   const gamesSnapshot = await getDocs(gamesRef);
   let game: Game | null = null;
+  let gameDocRef: DocumentReference | null = null;
+  user = new User(user.id, user.username);
+  const player = new Player(user, PositionEnum.NONE);
 
   for (const gameDoc of gamesSnapshot.docs) {
-    const gameData = gameDoc.data();
-    if (!gameData) continue;
-    game = gameData as Game;
-    break;
+    const data = gameDoc.data();
+    const curr = data as Game;
+    if (!curr.completed) {
+      game = convertToGame(curr);
+      gameDocRef = gameDoc.ref;
+      break;
+    }
   }
 
-  if (game) {
+  if (game && gameDocRef) {
     player.position = PositionEnum.TWO;
     game.playerTwo = player;
+    await updateDoc(gameDocRef, game.toObject());
   } else {
     player.position = PositionEnum.ONE;
     const newGame = new Game(getRandUuid(), player);
     const newGameRef = doc(gamesRef);
-    await setDoc(newGameRef, newGame);
+    await setDoc(newGameRef, newGame.toObject());
     game = newGame;
   }
   return game;
