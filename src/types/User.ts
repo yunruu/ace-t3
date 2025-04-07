@@ -6,4 +6,11 @@ export class User {
     this.id = id;
     this.username = username;
   }
+
+  toObject() {
+    return {
+      id: this.id,
+      username: this.username,
+    };
+  }
 }
