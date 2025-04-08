@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Ref, useRef } from "react";
 
 export interface IButtonProps {
   label: string;
@@ -6,6 +6,7 @@ export interface IButtonProps {
   onClick?: () => void;
   className?: string;
   type?: "submit" | "reset" | "button" | undefined;
+  ref?: Ref<HTMLButtonElement>;
 }
 
 export default function Button({
@@ -14,6 +15,7 @@ export default function Button({
   onClick,
   className,
   type,
+  ref,
 }: IButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -23,7 +25,7 @@ export default function Button({
     }
   };
 
-  const defaultStyles = "w-full rounded-lg px-4 py-2 cursor-pointer ";
+  const defaultStyles = "w-full rounded-lg px-4 py-2 cursor-pointer focus:border focus:border-indigo-300 ";
 
   const buttonStyles = () => {
     switch (variant) {
@@ -59,6 +61,7 @@ export default function Button({
 
   return (
     <button
+      ref={ref}
       type={type}
       className={`${buttonStyles()} ${className}`}
       onKeyDown={handleKeyDown}
