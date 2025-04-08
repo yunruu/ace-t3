@@ -12,15 +12,6 @@ export interface IGameBoardProps {
   onGameOver: (gameStatus: GameStatusEnum) => void;
 }
 
-const newMovePos = (oldBoard: number[], newBoard: number[]) => {
-  for (let i = 0; i < oldBoard.length; i++) {
-    const oldVal = oldBoard[i];
-    const newVal = newBoard[i];
-    if (oldVal !== newVal) return i + 1;
-  }
-  return 0;
-};
-
 export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
   const [game, setGame] = useState<Game>();
   const [player, setPlayer] = useState<Player>();
