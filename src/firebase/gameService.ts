@@ -88,11 +88,6 @@ export const updateGame = async (docId: string, game: Game): Promise<Game> => {
   return game;
 };
 
-export const saveGame = async (gameId: string, data: Game) => {
-  const gameRef = doc(db, GAMES_COLLECTION, gameId);
-  await setDoc(gameRef, data);
-};
-
 export const listenToGame = (
   gameId: string,
   callback: (data: Game) => void,
