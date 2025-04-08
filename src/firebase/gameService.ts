@@ -84,6 +84,10 @@ export const updateGame = async (docId: string, game: Game): Promise<Game> => {
   if (!gameSnap.exists()) {
     throw new Error("Game does not exist");
   }
+  const prevGame = gameSnap.data() as Game
+  if (prevGame.completed) {
+    throw new Error("Game is over")
+  }
   updateDoc(gameRef, game.toObject());
   return game;
 };
