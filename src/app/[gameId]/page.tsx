@@ -27,7 +27,7 @@ export default function GameSession() {
     setGameStatus(status);
     // when game over focus on play again button
     setTimeout(() => {
-      if(playAgainButtonRef.current){
+      if (playAgainButtonRef.current) {
         playAgainButtonRef.current.focus();
       }
     }, 0);
@@ -62,7 +62,11 @@ export default function GameSession() {
     <>
       <h1 className="font-bold text-4xl mb-6">Tic tac toe</h1>
       {gameOver && (
-        <div role="alertdialog" aria-modal="true" className="fixed top-0 left-0 w-[100vw] h-[100vh] bg-gray-600/70 flex items-center justify-center">
+        <div
+          role="alertdialog"
+          aria-modal="true"
+          className="fixed top-0 left-0 w-[100vw] h-[100vh] bg-gray-600/70 flex items-center justify-center"
+        >
           <section
             role="alert"
             className="rounded-lg px-4 py-10 flex flex-col items-center justify-center gap-7 w-[90%] md:w-[500px] min-h-[40vh] mb-6 bg-gray-800"
@@ -70,8 +74,18 @@ export default function GameSession() {
             <h1 className="uppercase font-bold text-4xl text-center">
               {displayHeader()}
             </h1>
-            <Button ref={playAgainButtonRef} label="Play again" className="!w-fit px-10 text-xl" onClick={handlePlayAgain} />
-            <Button label="Logout" variant="ghost" className="!w-fit px-10 text-xl" onClick={handleLogout} />
+            <Button
+              ref={playAgainButtonRef}
+              label="Play again"
+              className="!w-fit px-10 text-xl"
+              onClick={handlePlayAgain}
+            />
+            <Button
+              label="Logout"
+              variant="ghost"
+              className="!w-fit px-10 text-xl"
+              onClick={handleLogout}
+            />
           </section>
         </div>
       )}

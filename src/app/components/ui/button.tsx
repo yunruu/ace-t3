@@ -25,7 +25,8 @@ export default function Button({
     }
   };
 
-  const defaultStyles = "w-full rounded-lg px-4 py-2 cursor-pointer focus:border focus:border-indigo-300 ";
+  const defaultStyles =
+    "w-full rounded-lg px-4 py-2 cursor-pointer focus:border focus:border-indigo-300 ";
 
   const buttonStyles = () => {
     switch (variant) {

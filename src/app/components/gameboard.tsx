@@ -21,6 +21,7 @@ export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
     if (!gameId) {
       return;
     }
+
     const gameDocRef = doc(db, "games", gameId);
     const unsub = onSnapshot(gameDocRef, (snapshot) => {
       if (snapshot.exists()) {
@@ -30,24 +31,27 @@ export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
           let status: GameStatusEnum;
           if (game.winner === PositionEnum.NONE) {
             status = GameStatusEnum.DRAW;
-          }
-          if (game.winner === player.position) {
+          } else if (game.winner === player.position) {
             status = GameStatusEnum.WIN;
           } else {
             status = GameStatusEnum.LOSE;
           }
           onGameOver(status);
         }
+
         if (!game.playerTwo) {
           setLoading(true);
         } else {
           setLoading(false);
         }
+
         if (!player) {
           setup(game);
         }
       }
     });
+
+    // clean up the listener when the component unmounts.
     return () => unsub();
   }, [gameId, player, onGameOver]);
 
@@ -82,12 +86,12 @@ export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
   };
 
   const disabledCellStyles = (cell: PositionEnum) => {
-    if (!isPlayerTurn()) return "disabled bg-gray-700 !cursor-not-allowed";
+    if (!isPlayerTurn()) return "disabled bg-gray-700 cursor-not-allowed";
     switch (cell) {
       case PositionEnum.NONE:
         return "";
       default:
-        return "disabled !cursor-not-allowed";
+        return "disabled cursor-not-allowed";
     }
   };
 
@@ -96,30 +100,43 @@ export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
   };
 
   return loading ? (
-    <section className="m-auto h-[70vh] flex flex-col gap-7 items-center justify-center">
+    <section
+      aria-live="polite"
+      aria-busy="true"
+      className="m-auto h-[70vh] flex flex-col gap-7 items-center justify-center"
+    >
       <h2 className="text-2xl text-gray-300">
         Waiting for a player to join...
       </h2>
       <Spinner />
     </section>
   ) : (
-    <div
+    <section
       role="grid"
       aria-label="Tic Tac Toe board"
-      tabIndex={0}
       className="grid grid-cols-3 gap-1 md:px-[15vw] lg:px-[20vw]"
+      tabIndex={0}
     >
       {game?.board.map((cell, idx) => (
-        <div
+        <button
           key={idx}
           role="gridcell"
-          aria-label={`Cell ${idx + 1}, ${cell ?? "empty"}`}
-          className={`col-span-1 h-[30vw] md:h-[17vw] md:max-h-[30vh] lg:max-h-[25vh] border border-white cursor-pointer text-8xl rounded flex items-center justify-center ${disabledCellStyles(cell)}`}
+          aria-label={`Cell ${idx + 1}, ${
+            cell === PositionEnum.ONE
+              ? "O"
+              : cell === PositionEnum.TWO
+                ? "X"
+                : "empty"
+          }`}
+          className={`col-span-1 h-[30vw] md:h-[17vw] md:max-h-[30vh] lg:max-h-[25vh] border border-white text-8xl rounded flex items-center justify-center ${disabledCellStyles(
+            cell,
+          )}`}
           onClick={() => handleClickCell(cell, idx)}
+          disabled={!isPlayerTurn() || cell !== PositionEnum.NONE}
         >
           {displayCell(cell)}
-        </div>
+        </button>
       ))}
-    </div>
+    </section>
   );
 }
