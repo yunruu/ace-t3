@@ -30,7 +30,7 @@ export const toast = (
 
 export default function Toast({ message, isOpen, toastType }: IToastProps) {
   const toastStyles =
-    "bg-gray-700 text-white fixed top-6 right-6 z-[1000] min-w-[400px] min-h-[56px] rounded-sm shadow-lg transition-opacity duration-500 flex items-center px-4 gap-4";
+    "bg-gray-700 text-white fixed top-6 right-6 z-[1000] sm:min-w-[400px] min-h-[56px] rounded-sm shadow-lg transition-opacity duration-500 flex items-center px-4 gap-4";
 
   return (
     isOpen && (
