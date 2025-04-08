@@ -69,4 +69,12 @@ Development and testing of the app is done concurrently with the help of the in-
 ![image](https://github.com/user-attachments/assets/d695be12-ade1-43bb-8b6e-f437805dcfed)
 
 ## Accessibility Considerations
-I attempted to incorporate semantic HTML elements and ARIA (Accessible Rich Internet Applications) attributes, such as aria-label, aria-live, and role, to provide meaningful context to screen readers. For instance, game status updates are communicated using aria-live="polite" regions to ensure users relying on assistive technologies are kept informed without interruption. To improve keyboard navigation, all interactive elements like cells and buttons include the tabindex attribute, ensuring proper focus order. This allows users who rely on keyboards to navigate and interact with the game without using a mouse. The UI uses a high-contrast color scheme and large, legible fonts to support users with visual impairments. Game pieces (X and O) are displayed in bold and large text, and the board layout avoids any low-contrast combinations. I also ensured that focus indicators remain visible, and all click targets (like cells) have a large enough hit area, enhancing usability for individuals with motor difficulties. Overall, these decisions were made to not only deliver a smooth gaming experience but also to promote inclusivity, allowing users of varying abilities to enjoy the game.
+I attempted to incorporate semantic HTML elements and ARIA (Accessible Rich Internet Applications) attributes, such as aria-label, aria-live, and role, to provide meaningful context to screen readers. For instance, game status updates are communicated using aria-live="polite" regions to ensure users relying on assistive technologies are kept informed without interruption. 
+
+To improve keyboard navigation, all interactive elements like cells and buttons include the tabindex attribute, ensuring proper focus order. This allows users who rely on keyboards to navigate and interact with the game without using a mouse. 
+
+The UI uses a high-contrast color scheme and large, legible fonts to support users with visual impairments. Game pieces (X and O) are displayed in bold and large text, and the board layout avoids any low-contrast combinations. 
+
+I also ensured that focus indicators remain visible, and all click targets (like cells) have a large enough hit area, enhancing usability for individuals with motor difficulties. 
+
+Overall, these decisions were made to not only deliver a smooth gaming experience but also to promote inclusivity, allowing users of varying abilities to enjoy the game.
