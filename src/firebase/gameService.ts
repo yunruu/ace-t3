@@ -62,7 +62,7 @@ export const joinGame = async (user: User): Promise<Game> => {
     player.position = PositionEnum.ONE;
     const newGame = new Game(getRandUuid(), player);
     const newGameRef = doc(gamesRef);
-    newGame.docId = newGameRef.id
+    newGame.docId = newGameRef.id;
     await setDoc(newGameRef, newGame.toObject());
     game = newGame;
   }
@@ -105,6 +105,28 @@ export const listenToGame = (
   });
 };
 
+const isGameOver = (game: Game): { isOver: boolean; winner: PositionEnum } => {
+  const board = game.board;
+  // Winning combinations
+  const winCombos = [
+    [0, 1, 2], // Row 1
+    [3, 4, 5], // Row 2
+    [6, 7, 8], // Row 3
+    [0, 3, 6], // Column 1
+    [1, 4, 7], // Column 2
+    [2, 5, 8], // Column 3
+    [0, 4, 8], // Diagonal \
+    [2, 4, 6], // Diagonal /
+  ];
+  for (const [a, b, c] of winCombos) {
+    if (board[a] !== 3 && board[a] === board[b] && board[b] === board[c]) {
+      return { isOver: true, winner: board[a] };
+    }
+  }
+  const isDraw = !board.includes(PositionEnum.NONE);
+  return { isOver: isDraw, winner: PositionEnum.NONE };
+};
+
 export const makeMove = async (player: Player, game: Game, move: number) => {
   if (!game.docId || !player.position) return;
   if (move < 0 || move > 8 || game.board[move] !== PositionEnum.NONE) {
@@ -112,6 +134,14 @@ export const makeMove = async (player: Player, game: Game, move: number) => {
   }
   const newGame = convertToGame(await getGame(game.docId));
   newGame.board[move] = player.position;
-  newGame.currentTurn = newGame.currentTurn === PositionEnum.ONE ? PositionEnum.TWO : PositionEnum.ONE
+  newGame.currentTurn =
+    newGame.currentTurn === PositionEnum.ONE
+      ? PositionEnum.TWO
+      : PositionEnum.ONE;
+  const { isOver, winner } = isGameOver(newGame);
+  if (isOver) {
+    newGame.completed = true;
+    newGame.winner = winner;
+  }
   updateGame(game.docId, newGame);
 };

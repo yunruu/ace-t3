@@ -9,7 +9,8 @@ export const convertToGame = (g: Game) => {
     g.completed,
     g.board,
     g.currentTurn,
-    g.docId
+    g.docId,
+    g.winner,
   );
 };
 

@@ -8,6 +8,7 @@ export class Game {
   board: PositionEnum[];
   currentTurn: PositionEnum;
   docId?: string;
+  winner: PositionEnum;
 
   constructor(
     id: string,
@@ -17,6 +18,7 @@ export class Game {
     board?: PositionEnum[],
     currentTurn?: PositionEnum,
     docId?: string,
+    winner?: PositionEnum,
   ) {
     this.id = id;
     this.playerOne = playerOne;
@@ -25,6 +27,7 @@ export class Game {
     this.board = board || Array.from({ length: 9 }, () => PositionEnum.NONE);
     this.currentTurn = currentTurn || PositionEnum.ONE;
     this.docId = docId;
+    this.winner = winner || PositionEnum.NONE;
   }
 
   toObject() {
@@ -36,6 +39,7 @@ export class Game {
       board: this.board,
       currentTurn: this.currentTurn,
       docId: this.docId ? this.docId : null,
+      winner: this.winner,
     };
   }
 }

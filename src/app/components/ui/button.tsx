@@ -30,12 +30,12 @@ export default function Button({
       case "primary":
         return (
           defaultStyles +
-          "bg-indigo-800 hover:bg-indigo-900 active:bg-indigo-950"
+          "bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-600/90"
         );
       case "ghost":
         return (
           defaultStyles +
-          "bg-transparent border hover:bg-gray-900/30 active:bg-gray-900/50"
+          "bg-transparent border hover:bg-gray-900/30 active:bg-gray-700/50"
         );
       case "link":
         return (
@@ -45,7 +45,7 @@ export default function Button({
       default:
         return (
           defaultStyles +
-          "w-full bg-indigo-800 rounded-lg px-4 py-1 cursor-pointer hover:bg-indigo-900 active:bg-indigo-950"
+          "w-full bg-indigo-700 rounded-lg px-4 py-1 cursor-pointer hover:bg-indigo-600 active:bg-indigo-600/90"
         );
     }
   };
