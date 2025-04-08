@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import GameBoard from "@/app/components/gameBoard";
+import GameBoard from "@/app/[gameId]/gameBoard";
 import { usePathname, useRouter } from "next/navigation";
 import { GameStatusEnum } from "@/types";
 import Button from "../components/ui/button";
@@ -44,7 +44,7 @@ export default function GameSession() {
       const game = await joinGame(user);
       if (!game.docId) return;
       router.push(game.docId);
-      setGameOver(false); // Close dialog
+      setGameOver(false);
     } catch (e) {
       console.error(e);
     }

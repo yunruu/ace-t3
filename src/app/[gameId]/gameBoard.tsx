@@ -5,7 +5,7 @@ import { PositionEnum, Game, Player, GameStatusEnum } from "@/types";
 import { getUser } from "@/utils/login";
 import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import Spinner from "./ui/spinner";
+import Spinner from "../components/ui/spinner";
 
 export interface IGameBoardProps {
   gameId: string;
@@ -84,7 +84,7 @@ export default function GameBoard({ gameId, onGameOver }: IGameBoardProps) {
   const handleClickCell = (cell: PositionEnum, idx: number) => {
     if (!player || !game || !isPlayerTurn() || cell !== PositionEnum.NONE)
       return;
-    setAccessibleAnnouncement(`You selected cell ${idx + 1}.`)
+    setAccessibleAnnouncement(`You selected cell ${idx + 1}.`);
     setTimeout(() => makeMove(player, game, idx), 500);
   };
 
